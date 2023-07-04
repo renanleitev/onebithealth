@@ -21,6 +21,12 @@ const styles = StyleSheet.create({
     color:"#ff0043",
     fontWeight:"bold",
   },
+  // frase exibida com o nível do imc
+  titleImcLevel:{
+    fontSize:30,
+    color:"#ff0043",
+    fontWeight:"bold",
+  },
   // container com o botão de compartilhar
   boxShareButton:{
     width: "100%",

@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, Share } from "react-native";
 import styles from "./styles";
  
 export default function ResultImc(props) {
+    // compartilhando com outros aplicativos do celular
     const onShare = async () => {
         await Share.share({
             message: "Meu IMC hoje é: " + props.resultImc + ". Classificação: " + props.levelImc,
@@ -17,12 +18,12 @@ export default function ResultImc(props) {
                 </TouchableOpacity>}
             </View>
             <Text style={styles.titleResultImc}>
-                {props.messageResultIMc}
+                {props.messageResultImc}
             </Text>
             <Text style={styles.resultImc}>
                 {props.resultImc}
             </Text>
-            <Text style={styles.titleResultImc}>
+            <Text style={styles.titleImcLevel}>
                 {props.levelImc}
             </Text>
         </View>

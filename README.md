@@ -1,15 +1,28 @@
-# OneBitHealth
+# Calculadora IMC
 
 Aplicativo criado com uso de React-Native e Expo para fins de estudo.
 
-# Para baixar as dependências
+## Para criar o projeto (do zero)
+
+    npx create-expo-app [nome-do-projeto]
+
+## Para baixar as dependências
 
     npm install
 
-# Para iniciar o projeto
+## Para iniciar o projeto
 
     npx expo start
 
-# Para iniciar o projeto (WSL)
+## Para iniciar o projeto (WSL)
 
     npx expo start --tunnel
+
+## Para reiniciar o aplicativo
+
+    Basta pressionar a tecla 'r' no terminal
+
+## Links úteis
+
+1. React Native: https://reactnative.dev/docs/environment-setup
+2. Expo: https://docs.expo.dev/

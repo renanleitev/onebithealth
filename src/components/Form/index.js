@@ -1,13 +1,11 @@
 import React, { useState } from "react";
-import { Text, 
-    TextInput, 
-    View, 
-    TouchableOpacity, 
-    Vibration, 
-    Keyboard, 
-    Pressable,  } from "react-native";
+import { View, Vibration, Keyboard, Pressable } from "react-native";
 import ResultImc from "../ResultImc/index";
+import ListImc from "../ListImc";
 import styles from "./styles";
+import changeImcLevel from "../../services/changeImcLevel";
+import ButtonImc from "../ButtonImc";
+import InputImc from "../InputImc";
  
 export default function Form() {
     const [height, setHeight] = useState(null);
@@ -17,83 +15,70 @@ export default function Form() {
     const [imcLevel, setImcLevel] = useState(null);
     const [textButton, setTextButton] = useState("Calcular");
     const [errorMessage, setErrorMessage] = useState(null);
-    function imcCalc(){
+    const [imcList, setImcList] = useState([]);
+    function calculateImc(){
+        // corrigindo erro de vírgula, que pode aparecer no IOS (Apple)
         const heightFormat = height.replace(",", ".");
+        // calculando o IMC e fixando para dois digitos (Ex: 25.27)
         const resultImc = (weight / (heightFormat * heightFormat)).toFixed(2);
-        if (resultImc > 17 && resultImc <= 18.49) {
-            setImcLevel("Abaixo do peso");
-        } else if (resultImc >= 18.5 && resultImc <= 24.99) {
-            setImcLevel("Peso normal");
-        } else if (resultImc >= 25 && resultImc <= 29.99) {
-            setImcLevel("Acima do peso");
-        } else if (resultImc >= 30 && resultImc <= 34.99) {
-            setImcLevel("Obesidade grau 1");
-        } else if (resultImc >= 35 && resultImc <= 40) {
-            setImcLevel("Obesidade grau 2");
-        } else if (resultImc > 40) {
-            setImcLevel("Obesidade grau 3");
-        } else {
-            setImcLevel("Muito abaixo do peso");
-        }
+        // para cada item, o id deve ser único (garantir que não haverá duplicidade)
+        setImcList((arr) => [...arr, {id: new Date().getTime(), imc: resultImc}]);
         setImc(resultImc);
+        // identificando o nível de IMC
+        changeImcLevel(resultImc, setImcLevel);
+        // zerando o peso, a altura e a mensagem de erro, após o cálculo do imc
+        setHeight(null);
+        setWeight(null);
+        setErrorMessage(null);
+        // após calcular o imc, exibe os resultados
+        setMessageImc("Seu IMC é igual a:");
+        setTextButton("Calcular Novamente");
+        // fechando o teclado, para exibir os resultados para o usuário
+        Keyboard.dismiss();
     }
     function verificationImc(){
         if (imc == null) {
-            // Vibrar o celular para indicar o erro
+            // vibrar o celular para indicar o erro
             Vibration.vibrate();
             setErrorMessage("Campo obrigatário");
-            return;
-        }    
-    }
-    function validationImc() {
-        // Se o peso e a altura estiverem preenchidos
-        if (weight != null && height != null) {
-            imcCalc();
-            setHeight(null);
-            setWeight(null);
-            setMessageImc("Seu imc é igual a:");
-            setTextButton("Calcular Novamente");
-            setErrorMessage(null);
-            // Fechando o teclado, para exibir os resultados para o usuário
-            Keyboard.dismiss();
-            return
-        }
-        // Se o peso e a altura não estiverem preenchidos, volta para o padrão
-        verificationImc();
+        } 
+        // se o peso e a altura não estiverem preenchidos, volta para o padrão               
         setImc(null);
         setTextButton("Calcular");
         setMessageImc("Preencha o peso e a altura");
         setImcLevel(null);
     }
+    function validationImc() {
+        if (weight != null && height != null) {
+            calculateImc();
+        } else {
+            verificationImc();
+        }
+    }
     return (
-        <Pressable onPress={Keyboard.dismiss} style={styles.formContext}>
-            <View style={styles.form}>
-                <Text style={styles.formLabel}>Altura</Text>
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
-                <TextInput
-                style={styles.input}
-                onChangeText={setHeight}
-                value={height}
-                placeholder="Ex: 1.75"
-                keyboardType="numeric"
-                />
-                <Text style={styles.formLabel}>Peso</Text>
-                <Text style={styles.errorMessage}>{errorMessage}</Text>
-                <TextInput
-                style={styles.input}
-                onChangeText={setWeight}
-                value={weight}
-                placeholder="Ex: 86.300"
-                keyboardType="numeric"
-                />
-                <TouchableOpacity
-                style={styles.buttonCalculator}
-                title={textButton} 
-                onPress={() => validationImc()}>
-                    <Text style={styles.textButtonCalculator}>{textButton}</Text>
-                </TouchableOpacity>
-            </View>
-            <ResultImc messageResultIMc={messageImc} resultImc={imc} levelImc={imcLevel}/>
-        </Pressable>
+        <View style={styles.formContext}>
+            {/* se o imc for nulo, exibe o formulário */}
+            {imc === null && 
+            <Pressable onPress={Keyboard.dismiss} style={styles.form}>
+                <InputImc 
+                value={height} 
+                setValue={setHeight} 
+                title={"Altura"} 
+                errorMessage={errorMessage} 
+                placeholder={"Ex: 1.75"}/>
+                <InputImc 
+                value={weight} 
+                setValue={setWeight} 
+                title={"Peso"} 
+                errorMessage={errorMessage} 
+                placeholder={"Ex: 90.5"}/>
+            </Pressable>}
+            {/* se o imc não for nulo, exibe o resultado */}
+            <ButtonImc textButton={textButton} functionButton={validationImc}/>
+            <ResultImc messageResultImc={messageImc} resultImc={imc} levelImc={imcLevel}/>
+            {/* Se houver itens na lista, exibe os resultados e o botão de reset */}
+            {(imc !== null && imcList.length > 0) && 
+            <ListImc array={imcList} setArray={setImcList}/>}
+        </View>
     );
 }
