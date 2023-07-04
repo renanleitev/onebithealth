@@ -3,21 +3,17 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     //formContext é a area que ficara em torno do nosso form
     formContext: {
-      width: "100%",
-      height: "100%",
-      bottom: 0,
+      flex: 1,
       backgroundColor: "#ffffff",
+      marginTop: 30,
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
       alignItems: "center",
-      marginTop: 30,
+      paddingTop: 10,
     },
     //form é um componente filho de formContext e nele ficara nossos inputs e etc..
     form: {
       width: "100%",
-      height: "auto",
-      marginTop: 30,
-      padding: 10,
     },
     //formLabel é o nome dos nossos inputs que ficara acima deles
     formLabel: {
@@ -36,7 +32,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       paddingLeft: 10,
     },
-    //buttonCalculator e o botao que irá chamar a função do calculo de imc 
+    //buttonCalculator e o botão que irá chamar a função do calculo de imc 
     buttonCalculator: {
       borderRadius: 50,
       alignItems: "center",
@@ -46,13 +42,20 @@ const styles = StyleSheet.create({
       paddingTop: 14,
       paddingBottom: 14,
       marginLeft: 12,
-      marginTop: 30,
+      marginTop: 10,
     },
-    //textButtonCalculator é responsáve por por estilizar o texto dentro dentro do button
+    //textButtonCalculator é responsável por por estilizar o texto dentro dentro do button
     textButtonCalculator: {
       fontSize: 20,
       color: "#ffffff",
     },
+    // errorMessage é responsável por exibir a mensagem de erro
+    errorMessage: {
+      fontSize: 12,
+      color: "red",
+      fontWeight: "bold",
+      paddingLeft: 20,
+    }
   });
    
 //Lembre-se sempre do export default, sem ele o seu estilo nao será exibido no seu componente.
